@@ -1,0 +1,301 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MBTI Personality Questionnaire</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    h1 {
+      color: #4a90e2;
+      margin-bottom: 20px;
+    }
+
+    .container {
+      background-color: #ffffff;
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 600px;
+      margin-top: 20px;
+    }
+
+    p {
+      font-size: 18px;
+      color: #333333;
+      margin: 10px 0;
+      line-height: 1.6;
+    }
+
+    .question {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    .options {
+      display: block;
+      margin-left: 20px;
+    }
+
+    label {
+      font-size: 16px;
+      color: #555555;
+      cursor: pointer;
+      line-height: 1.5;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    input[type="radio"] {
+      margin-right: 8px;
+      accent-color: #4a90e2;
+    }
+
+    .submit-reset-buttons {
+      margin-top: 20px;
+    }
+
+    input[type="submit"], input[type="reset"] {
+      background-color: #4a90e2;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 10px;
+      transition: background-color 0.3s;
+    }
+
+    input[type="submit"]:hover, input[type="reset"]:hover {
+      background-color: #357ab7;
+    }
+
+    #result {
+      font-size: 20px;
+      font-weight: bold;
+      color: #4a90e2;
+      margin-top: 20px;
+      line-height: 1.6;
+    }
+  </style>
+  <script>
+    let currentQuestion = 0; // 当前显示的题目索引
+    let answers = {}; // 存储用户的答案
+
+    // 每一道题目的数据
+    const questions = [
+      {
+        question: "You are more likely to:",
+        options: [
+          { value: "E", text: "Enjoy activities with friends and colleagues, drawing energy from the outside world." },
+          { value: "I", text: "Prefer spending time alone, reflecting and restoring energy by yourself." }
+        ]
+      },
+      {
+        question: "When starting a new project, you focus more on:",
+        options: [
+          { value: "S", text: "Practical details and known information, focusing on how to achieve your goal step-by-step." },
+          { value: "N", text: "Future possibilities and big-picture thinking, focusing on ideas and innovation." }
+        ]
+      },
+      {
+        question: "When making a decision, you tend to prioritize:",
+        options: [
+          { value: "T", text: "Logic, objective analysis, and facts, making decisions based on rational reasoning." },
+          { value: "F", text: "People's feelings, values, and interpersonal harmony, considering the emotional impact on others." }
+        ]
+      },
+      {
+        question: "You prefer:",
+        options: [
+          { value: "J", text: "A structured, organized life with clear plans and schedules." },
+          { value: "P", text: "A flexible, spontaneous life, adjusting plans as situations change." }
+        ]
+      }
+    ];
+
+    // MBTI类型描述库
+    const personalityDescriptions = {
+      "ISTJ": `
+        <h2>ISTJ (检查员型)</h2>
+        <p><strong>行事特点：</strong>严肃、安静，通过全面性和可靠性获得成功。实际，有责任感，决定有逻辑性，并一步步地朝着目标前进。</p>
+        <p><strong>性格：</strong>安静、严肃，重视传统和忠诚。</p>
+        <p><strong>爱情：</strong>忠诚、值得信赖，会深思熟虑后选择伴侣，希望找到一个可靠、忠诚、有责任心和有共同目标的伴侣。</p>
+        <p><strong>事业：</strong>适合从事会计、审计师、数据录入员、档案管理员等需要精确、注重细节和有秩序的工作。</p>
+      `,
+      "ISFJ": `
+        <h2>ISFJ (照顾者型)</h2>
+        <p><strong>行事特点：</strong>安静、友好、有责任感和良知。坚定地致力于完成他们的义务。</p>
+        <p><strong>性格：</strong>全面、勤勉、精确，忠诚、体贴，留心和记得他们重视的人的小细节，关心他人的感受。</p>
+        <p><strong>爱情：</strong>非常忠诚和细心，注重伴侣的幸福和安全感，倾向于通过实际行动和细致的关怀来表达爱意。</p>
+        <p><strong>事业：</strong>适合护士、教师、社会工作者、行政助理等关心他人、注重细节的职业。</p>
+      `,
+        "INFJ": `
+        <h2>INFJ (博爱型)</h2>
+        <p><strong>行事特点：</strong>寻求思想、关系、物质等之间的意义和联系。希望了解什么能够激励人，对人有很强的洞察力。</p>
+        <p><strong>性格：</strong>有责任心，坚持自己的价值观。对于如何更好地服务大众有清晰的远景。</p>
+        <p><strong>爱情：</strong>深情的理想主义者，追求深层次的情感连接。</p>
+        <p><strong>事业：</strong>适合心理咨询师、作家、艺术家、宗教领袖等需要深刻洞察力和创造力的职业。</p>
+      `,
+      "INTJ": `
+        <h2>INTJ (专家型)</h2>
+        <p><strong>行事特点：</strong>在实现自己的想法和达成自己的目标时有创新的想法和非凡的动力。</p>
+        <p><strong>性格：</strong>能很快洞察到外界事物间的规律并形成长期的远景计划。一旦决定做一件事就会开始规划并直到完成为止。</p>
+        <p><strong>爱情：</strong>战略性的规划者，喜欢与伴侣共同规划未来。重视智慧和独立。</p>
+        <p><strong>事业：</strong>适合需要创新和长期规划的职业，如企业战略规划、科研等。</p>
+      `,
+      "ENTJ": `
+        <h2>ENTJ (统帅型)</h2>
+        <p><strong>行事特点：</strong>坦诚、果断，有天生的领导能力。能很快看到公司/组织程序和政策中的不合理性和低效能性。</p>
+        <p><strong>性格：</strong>善于做长期的计划和目标的设定。通常见多识广，博览群书，喜欢拓展自己的知识面并将此分享给他人。</p>
+        <p><strong>爱情：</strong>果断的领导者，希望与伴侣共同设定目标和计划，追求高效和有序的关系。</p>
+        <p><strong>事业：</strong>适合企业领导者、政治家、律师、项目经理等需要领导能力和战略思维的职业。</p>
+      `,
+      "ENFJ": `
+        <h2>ENFJ (教导型)</h2>
+        <p><strong>行事特点：</strong>热情、为他人着想、易感应、有责任心。非常注重他人的感情、需求和动机。</p>
+        <p><strong>性格：</strong>善于发现他人的潜能，并希望能帮助他们实现。能成为个人或群体成长和进步的催化剂。</p>
+        <p><strong>爱情：</strong>热情的支持者，倾向于无私地支持伴侣，努力满足伴侣的情感需求。</p>
+        <p><strong>事业：</strong>适合教师、心理咨询师、牧师、人力资源经理等需要领导力和同理心的职业。</p>
+      `,
+      "ENFP": `
+        <h2>ENFP (活力型)</h2>
+        <p><strong>行事特点：</strong>热情洋溢、富有想象力。认为人生有很多的可能性。</p>
+        <p><strong>性格：</strong>能很快地将事情和信息联系起来，然后很自信地根据自己的判断解决问题。</p>
+        <p><strong>爱情：</strong>充满活力的冒险家，喜欢通过新奇和有趣的活动来增进感情。</p>
+        <p><strong>事业：</strong>适合需要创造力和人际互动的职业，如市场营销、公关、创意写作等。</p>
+      `,
+      "INFP": `
+        <h2>INFP (理想型)</h2>
+        <p><strong>行事特点：</strong>理想主义，对于自己的价值观和自己觉得重要的人非常忠诚。</p>
+        <p><strong>性格：</strong>希望外部的生活和自己内心的价值观是统一的。好奇心重，很快能看到事情的可能性。</p>
+        <p><strong>爱情：</strong>浪漫的理想主义者，希望找到一个能够理解和珍惜自己内心世界的伴侣。</p>
+        <p><strong>事业：</strong>适合心理咨询师、作家、艺术家等需要深刻洞察力和创造力的职业。</p>
+      `,
+      "ESTJ": `
+        <h2>ESTJ (管理者型)</h2>
+        <p><strong>行事特点：</strong>实际、现实主义。果断，一旦下决心就会马上行动。</p>
+        <p><strong>性格：</strong>善于将项目和人组织起来将事情完成，并尽可能用最有效率的方法得到结果。</p>
+        <p><strong>爱情：</strong>实干的管理者，注重计划和执行。希望与伴侣共同实现目标和责任。</p>
+        <p><strong>事业：</strong>适合需要组织和执行能力的职业，如企业管理、行政管理等。</p>
+      `,
+      "ESFJ": `
+        <h2>ESFJ (支持者型)</h2>
+        <p><strong>行事特点：</strong>热心肠、有责任心、合作。希望周边的环境温馨而和谐，并为此果断地执行。</p>
+        <p><strong>性格：</strong>喜欢和他人一起精确并及时地完成任务。忠诚，即使在细微的事情上也如此。</p>
+        <p><strong>爱情：</strong>关怀的社交者，非常忠诚和细心，注重伴侣的幸福和安全感。</p>
+        <p><strong>事业：</strong>适合护士、教师、客户服务代表、活动组织者等需要关心他人和团队合作的职业。</p>
+      `,
+      "ESTP": `
+        <h2>ESTP (冒险家型)</h2>
+        <p><strong>行事特点：</strong>灵活、忍耐力强，实际，注重结果。觉得理论和抽象的解释非常无趣。</p>
+        <p><strong>性格：</strong>喜欢积极地采取行动解决问题。注重当前，自然不做作，享受和他人在一起的时刻。</p>
+        <p><strong>爱情：</strong>实际的冒险家，充满活力和冒险精神，喜欢通过实际行动和体验来增进感情。</p>
+        <p><strong>事业：</strong>适合需要实际操作和快速反应的职业，如销售、警察、消防员等。</p>
+      `,
+      "ESFP": `
+        <h2>ESFP (表演者型)</h2>
+        <p><strong>行事特点：</strong>外向、友好、接受力强。热爱生活、人类和物质上的享受。</p>
+        <p><strong>性格：</strong>喜欢和别人一起将事情做成功。在工作中讲究常识和实用性，并使工作显得有趣。</p>
+        <p><strong>爱情：</strong>充满活力的表演者，喜欢通过有趣和冒险的活动来增进感情。</p>
+        <p><strong>事业：</strong>适合需要人际互动和表演能力的职业，如演员、公关、活动策划等。</p>
+      `,
+      "ISFP": `
+        <h2>ISFP (艺术家型)</h2>
+        <p><strong>行事特点：</strong>感性、内向、善于观察。善于理解他人的感受，通常拥有强烈的审美观念和艺术才华。</p>
+        <p><strong>性格：</strong>充满创造力、对艺术敏感、善于表达情感、迷人且充满魅力。</p>
+        <p><strong>爱情：</strong>温柔的艺术家，表现出极大的温柔和感性，注重伴侣的情感和艺术表达。</p>
+        <p><strong>事业：</strong>适合富有创造性的工作，如艺术家、设计师、摄影师等。</p>
+      `,
+      "ISTP": `
+        <h2>ISTP (工匠型)</h2>
+        <p><strong>行事特点：</strong>注重理性和实际性，喜欢通过实际行动和解决问题来表达爱意。</p>
+        <p><strong>性格：</strong>冷静的探险家，喜欢通过实际行动和解决问题来表达爱意。重视独立和自由。</p>
+        <p><strong>爱情：</strong>冷静的探险家，注重理性和实际性，喜欢通过实际行动和解决问题来表达爱意。</p>
+        <p><strong>事业：</strong>适合技术性、操作性的工作，如机械师、工程师、外科医生等。</p>
+      `,
+      "INTP": `
+        <h2>INTP (逻辑学家型)</h2>
+        <p><strong>行事特点：</strong>分析性的思考者，注重理性和深度思考，喜欢与伴侣进行深刻的思想交流。</p>
+        <p><strong>性格：</strong>重视知识和独立，寻求能够与自己在智力和兴趣上契合的伴侣。</p>
+        <p><strong>爱情：</strong>分析性的思考者，喜欢与伴侣进行深刻的思想交流。</p>
+        <p><strong>事业：</strong>适合需要深度思考和独立工作的职业，如科学家、哲学家、程序员等。</p>
+      `,
+      "ENTP": `
+        <h2>ENTP (发明家型)</h2>
+        <p><strong>行事特点：</strong>机智的辩论家，充满好奇和创造力，喜欢通过辩论和交流来增进感情。</p>
+        <p><strong>性格：</strong>重视思想上的自由和灵活性，寻求能够与自己共同探索和创新的伴侣。</p>
+        <p><strong>爱情：</strong>机智的辩论家，充满好奇和创造力，喜欢通过辩论和交流来增进感情。</p>
+        <p><strong>事业：</strong>适合需要创新思维和灵活应变能力的职业，如企业家、市场营销、咨询顾问等。</p>
+      `,
+    };
+
+    // 显示当前问题
+    function showQuestion() {
+      const question = questions[currentQuestion];
+      const questionContainer = document.getElementById("question");
+      const optionsContainer = document.getElementById("options");
+      questionContainer.innerHTML = question.question;
+      optionsContainer.innerHTML = "";
+      question.options.forEach(option => {
+        optionsContainer.innerHTML += `
+          <label><input type="radio" name="answer" value="${option.value}" onclick="saveAnswer('${option.value}')"> ${option.text}</label>
+        `;
+      });
+    }
+
+    // 保存答案并跳转到下一题
+    function saveAnswer(value) {
+      answers[currentQuestion] = value;
+      if (currentQuestion < questions.length - 1) {
+        currentQuestion++;
+        showQuestion();
+      } else {
+        displayResult();
+      }
+    }
+
+    // 显示MBTI结果和描述
+    function displayResult() {
+      const result = Object.values(answers).join('');
+      const resultDescription = personalityDescriptions[result] || "<p>Sorry, we couldn't determine your personality type.</p>";
+      document.getElementById("question-container").innerHTML = `
+        <h2>Your MBTI is: ${result}</h2>
+        ${resultDescription}
+        <p>Thank you for completing the test!</p>
+      `;
+    }
+
+    // 初始化
+    window.onload = showQuestion;
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>MBTI Personality Questionnaire</h1>
+    <p>Please answer the following questions:</p>
+
+    <div id="question-container">
+      <p id="question"></p>
+      <div id="options"></div>
+    </div>
+
+    <div class="submit-reset-buttons">
+      <input type="reset" value="Reset" onclick="location.reload()">
+    </div>
+  </div>
+</body>
+</html>
