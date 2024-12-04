@@ -1,5 +1,73 @@
-<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=900764780&bvid=BV19N4y1N743&cid=1333631075&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
-<p>before iframe</p>
-<iframe width=330 height=86 src="https://baidu.com"></iframe>
-<p>after iframe</p>
-<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=2638631898&auto=1&height=66"></iframe>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>守株待兔 - 智慧的寓言</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to bottom, #f0f8ff, #e6e6fa);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+    h1 {
+      font-size: 2.5em;
+      color: #4CAF50;
+      margin-bottom: 20px;
+    }
+    .video-container {
+      width: 80%;
+      max-width: 800px;
+      border: 5px solid #4CAF50;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    iframe {
+      width: 100%;
+      height: auto;
+      border: none;
+    }
+    .description {
+      margin-top: 20px;
+      font-size: 1.2em;
+      color: #333;
+      text-align: center;
+      line-height: 1.6;
+    }
+    .cta {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background-color 0.3s;
+    }
+    .cta:hover {
+      background-color: #45cb85c;
+    }
+    .cta:active {
+      background-color: #45a945b;
+    }
+  </style>
+</head>
+<body>
+  <h1>守株待兔 - 等待奇迹，还是自力更生？</h1>
+  <div class="video-container">
+    <iframe src="//player.bilibili.com/player.html?isOutside=true&aid=113594284907207&bvid=BV1jNi2YXE3d&cid=27177715800&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+  </div>
+  <div class="description">
+    <p>这个成语故事讲述了一个农夫偶然在田边捡到一只撞死在树桩上的兔子，之后他便放弃耕作，每天守在树桩旁等待奇迹再次发生。这个故事告诉我们，依赖偶然的好运是不可靠的，只有通过自己的努力才能获得稳定的成果。</p>
+  </div>
+  <button class="cta" onclick="alert('感谢您的点击！欢迎您探索更多成语故事！')">探索更多成语故事</button>
+</body>
+</html>
