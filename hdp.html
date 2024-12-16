@@ -9,7 +9,7 @@
     overflow: hidden;
     width: 100%;
     height: 100%;
-    touch-action: pan-y;
+    touch-action: manipulation; /* 允许触摸操作 */
   }
   .slide {
     width: 100%;
@@ -36,33 +36,29 @@
   const slides = document.querySelectorAll('.slide');
   let startY;
 
+  function updateSlide(index) {
+    slides.forEach((slide, i) => {
+      slide.style.opacity = i === index ? 1 : 0;
+    });
+  }
+
   document.addEventListener('touchstart', (e) => {
     startY = e.touches[0].pageY;
   });
 
-  document.addEventListener('touchmove', (e) => {
-    e.preventDefault(); // 阻止默认滚动行为
-  });
-
   document.addEventListener('touchend', (e) => {
     const endY = e.touches[0].pageY;
-    const diff = endY - startY;
+    const diff = startY - endY; // 计算上滑距离
 
     if (Math.abs(diff) > 100) { // 如果滑动距离大于100px
-      if (diff > 0) { // 上滑
+      if (diff > 0) { // 下滑
         currentIndex = (currentIndex + 1) % slides.length;
-      } else { // 下滑
+      } else { // 上滑
         currentIndex = (currentIndex - 1 + slides.length) % slides.length;
       }
-      updateSlides();
+      updateSlide(currentIndex);
     }
   });
-
-  function updateSlides() {
-    slides.forEach((slide, index) => {
-      slide.style.opacity = index === currentIndex ? 1 : 0;
-    });
-  }
 </script>
 
 </body>
