@@ -35,9 +35,17 @@
   .slide:nth-child(3) {
     background-color: blue;
   }
-  .title, .祝福文字 {
+  .title {
+    font-size: 2em;
+    color: black;
     opacity: 0;
-    transition: opacity 0.5s ease-in-out;
+  }
+  .祝福文字 {
+    font-size: 1em;
+    color: white;
+    opacity: 0;
+    text-align: center;
+    max-width: 80%;
   }
 </style>
 </head>
@@ -58,53 +66,58 @@
 
 <script>
   let currentIndex = 0;
-  let isAnimating = false; // 控制动画的标志
   const slides = document.querySelectorAll('.slide');
+  let startY;
 
   function updateSlide(index) {
     slides.forEach((slide, i) => {
       slide.style.opacity = i === index ? 1 : 0;
-      slide.querySelector('.title').style.opacity = 0;
-      slide.querySelector('.祝福文字').style.opacity = 0;
-      slide.querySelector('.title').style.animation = '';
-      slide.querySelector('.祝福文字').style.animation = '';
     });
   }
 
   function playAnimation() {
-    if (!isAnimating) {
-      isAnimating = true;
-      const currentSlide = slides[currentIndex];
-      const title = currentSlide.querySelector('.title');
-      const message = currentSlide.querySelector('.祝福文字');
+    const currentSlide = slides[currentIndex];
+    const title = currentSlide.querySelector('.title');
+    const message = currentSlide.querySelector('.祝福文字');
 
-      title.style.animation = 'slideDown 0.5s forwards';
-      message.style.animation = 'fadeIn 0.5s 0.5s forwards';
-
-      setTimeout(() => {
-        isAnimating = false;
-      }, 1000); // 假设动画在1秒内完成
-    }
+    title.style.opacity = 1; // Ensure title is visible before animating
+    title.style.animation = 'slideDown 0.5s forwards';
+    message.style.opacity = 1; // Ensure message is visible before animating
+    message.style.animation = 'fadeIn 0.5s 0.5s forwards';
   }
 
-  document.addEventListener('click', () => {
-    if (currentIndex < slides.length) {
-      updateSlide(currentIndex);
-      playAnimation();
-      currentIndex++;
-      if (currentIndex >= slides.length) {
-        currentIndex = 0; // 重置索引，重新开始
+  document.addEventListener('touchstart', (e) => {
+    startY = e.touches[0].pageY;
+  });
+
+  document.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+  });
+
+  document.addEventListener('touchend', (e) => {
+    const endY = e.changedTouches[0].pageY;
+    const diff = startY - endY;
+
+    if (Math.abs(diff) > 100) {
+      if (diff > 0) {
+        currentIndex = (currentIndex + 1) % slides.length;
+        if (currentIndex === 0) { // Reset for the second loop
+          updateSlide(currentIndex);
+          playAnimation();
+        }
+      } else {
+        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
       }
+      updateSlide(currentIndex);
     }
   });
 
-  // 自动播放下一张幻灯片
-  setInterval(() => {
-    if (!isAnimating) { // 如果当前没有动画播放，则自动播放下一张
-      currentIndex = (currentIndex + 1) % slides.length;
+  document.addEventListener('click', () => {
+    if (currentIndex !== 0) {
       updateSlide(currentIndex);
     }
-  }, 3000);
+    playAnimation();
+  });
 </script>
 
 <style>
