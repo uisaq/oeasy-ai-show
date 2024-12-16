@@ -68,18 +68,14 @@
   let currentIndex = 0;
   let isAnimating = false;
   const slides = document.querySelectorAll('.slide');
-  let firstLoop = true;
 
   function updateSlide(index) {
     slides.forEach((slide, i) => {
       slide.style.opacity = i === index ? 1 : 0;
-      if (firstLoop && i === index) {
-        slide.querySelector('.title').style.opacity = 1;
-        slide.querySelector('.祝福文字').style.opacity = 1;
-      } else {
-        slide.querySelector('.title').style.opacity = 0;
-        slide.querySelector('.祝福文字').style.opacity = 0;
-      }
+      slide.querySelector('.title').style.opacity = 0;
+      slide.querySelector('.祝福文字').style.opacity = 0;
+      slide.querySelector('.title').style.animation = '';
+      slide.querySelector('.祝福文字').style.animation = '';
     });
   }
 
@@ -95,6 +91,7 @@
   document.addEventListener('click', () => {
     if (!isAnimating) {
       isAnimating = true;
+      updateSlide(currentIndex);
       playAnimation();
       setTimeout(() => {
         isAnimating = false;
@@ -103,11 +100,8 @@
   });
 
   function nextSlide() {
-    if (!isAnimating) {
+    if (!isAnimating) { // Only advance slides when not animating
       currentIndex = (currentIndex + 1) % slides.length;
-      if (currentIndex === 0) {
-        firstLoop = false; // After the first loop, animations will be controlled by clicks
-      }
       updateSlide(currentIndex);
     }
   }
