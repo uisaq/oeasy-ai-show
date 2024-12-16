@@ -34,20 +34,27 @@
 <script>
   let currentIndex = 0;
   const slides = document.querySelectorAll('.slide');
+  let startY;
 
   document.addEventListener('touchstart', (e) => {
-    const startY = e.touches[0].pageY;
+    startY = e.touches[0].pageY;
+  });
+
+  document.addEventListener('touchmove', (e) => {
+    e.preventDefault(); // 阻止默认滚动行为
   });
 
   document.addEventListener('touchend', (e) => {
     const endY = e.touches[0].pageY;
     const diff = endY - startY;
 
-    if (diff > 100) { // If the user swipes up
-      currentIndex = (currentIndex + 1) % slides.length;
+    if (Math.abs(diff) > 100) { // 如果滑动距离大于100px
+      if (diff > 0) { // 上滑
+        currentIndex = (currentIndex + 1) % slides.length;
+      } else { // 下滑
+        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+      }
       updateSlides();
-    } else if (diff < -100) {
-      // If the user swipes down, you can add functionality here if needed
     }
   });
 
