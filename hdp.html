@@ -35,17 +35,9 @@
   .slide:nth-child(3) {
     background-color: blue;
   }
-  .title {
-    font-size: 2em;
-    color: black;
+  .title, .祝福文字 {
     opacity: 0;
-  }
-  .祝福文字 {
-    font-size: 1em;
-    color: white;
-    opacity: 0;
-    text-align: center;
-    max-width: 80%;
+    transition: opacity 0.5s ease-in-out;
   }
 </style>
 </head>
@@ -67,7 +59,6 @@
 <script>
   let currentIndex = 0;
   const slides = document.querySelectorAll('.slide');
-  let startY;
 
   function updateSlide(index) {
     slides.forEach((slide, i) => {
@@ -80,43 +71,24 @@
     const title = currentSlide.querySelector('.title');
     const message = currentSlide.querySelector('.祝福文字');
 
-    title.style.opacity = 1; // Ensure title is visible before animating
+    title.style.opacity = 1; // 设置标题可见
+    message.style.opacity = 1; // 设置祝福文字可见
+
+    // 为标题添加下滑动画
     title.style.animation = 'slideDown 0.5s forwards';
-    message.style.opacity = 1; // Ensure message is visible before animating
+    // 为祝福文字添加淡入动画
     message.style.animation = 'fadeIn 0.5s 0.5s forwards';
   }
 
-  document.addEventListener('touchstart', (e) => {
-    startY = e.touches[0].pageY;
-  });
-
-  document.addEventListener('touchmove', (e) => {
-    e.preventDefault();
-  });
-
-  document.addEventListener('touchend', (e) => {
-    const endY = e.changedTouches[0].pageY;
-    const diff = startY - endY;
-
-    if (Math.abs(diff) > 100) {
-      if (diff > 0) {
-        currentIndex = (currentIndex + 1) % slides.length;
-        if (currentIndex === 0) { // Reset for the second loop
-          updateSlide(currentIndex);
-          playAnimation();
-        }
-      } else {
-        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-      }
-      updateSlide(currentIndex);
-    }
-  });
-
   document.addEventListener('click', () => {
-    if (currentIndex !== 0) {
+    if (currentIndex < slides.length) {
       updateSlide(currentIndex);
+      playAnimation();
+      currentIndex++;
+      if (currentIndex >= slides.length) {
+        currentIndex = 0; // 重置索引，重新开始
+      }
     }
-    playAnimation();
   });
 </script>
 
