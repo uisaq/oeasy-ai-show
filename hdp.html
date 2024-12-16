@@ -9,6 +9,7 @@
     overflow: hidden;
     width: 100%;
     height: 100%;
+    touch-action: pan-y;
   }
   .slide {
     width: 100%;
@@ -57,7 +58,6 @@
 
 <script>
   let currentIndex = 0;
-  let isAnimating = false;
   const slides = document.querySelectorAll('.slide');
 
   function updateSlide(index) {
@@ -67,36 +67,29 @@
   }
 
   function playAnimation() {
-    if (!isAnimating) {
-      isAnimating = true;
-      const currentSlide = slides[currentIndex];
-      const title = currentSlide.querySelector('.title');
-      const message = currentSlide.querySelector('.祝福文字');
+    const currentSlide = slides[currentIndex];
+    const title = currentSlide.querySelector('.title');
+    const message = currentSlide.querySelector('.祝福文字');
 
-      title.style.opacity = 1;
-      message.style.opacity = 1;
+    title.style.opacity = 1; // 设置标题可见
+    message.style.opacity = 1; // 设置祝福文字可见
 
-      title.style.animation = 'slideDown 0.5s forwards';
-      message.style.animation = 'fadeIn 0.5s 0.5s forwards';
-
-      setTimeout(() => {
-        isAnimating = false;
-      }, 1000); // Assuming animations complete within 1 second
-    }
+    // 为标题添加下滑动画
+    title.style.animation = 'slideDown 0.5s forwards';
+    // 为祝福文字添加淡入动画
+    message.style.animation = 'fadeIn 0.5s 0.5s forwards';
   }
 
   document.addEventListener('click', () => {
-    if (!isAnimating) {
+    if (currentIndex < slides.length) {
+      updateSlide(currentIndex);
       playAnimation();
+      currentIndex++;
+      if (currentIndex >= slides.length) {
+        currentIndex = 0; // 重置索引，重新开始
+      }
     }
   });
-
-  function nextSlide() {
-    currentIndex = (currentIndex + 1) % slides.length;
-    updateSlide(currentIndex);
-  }
-
-  setInterval(nextSlide, 3000); // Change slide every 3 seconds
 </script>
 
 <style>
