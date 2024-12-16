@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    touch-action: pan-y;
+  }
+  .slide {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+  .slide:nth-child(1) {
+    opacity: 1;
+  }
+</style>
+</head>
+<body>
+
+<div class="slide" style="background-color: yellow;"></div>
+<div class="slide" style="background-color: green;"></div>
+<div class="slide" style="background-color: blue;"></div>
+
+<script>
+  let currentIndex = 0;
+  const slides = document.querySelectorAll('.slide');
+
+  document.addEventListener('touchstart', (e) => {
+    const startY = e.touches[0].pageY;
+  });
+
+  document.addEventListener('touchend', (e) => {
+    const endY = e.touches[0].pageY;
+    const diff = endY - startY;
+
+    if (diff > 100) { // If the user swipes up
+      currentIndex = (currentIndex + 1) % slides.length;
+      updateSlides();
+    } else if (diff < -100) {
+      // If the user swipes down, you can add functionality here if needed
+    }
+  });
+
+  function updateSlides() {
+    slides.forEach((slide, index) => {
+      slide.style.opacity = index === currentIndex ? 1 : 0;
+    });
+  }
+</script>
+
+</body>
+</html>
