@@ -58,33 +58,26 @@
 
 <script>
   let currentIndex = 0;
-  let isAnimating = false; // 控制动画的标志
   const slides = document.querySelectorAll('.slide');
 
   function updateSlide(index) {
     slides.forEach((slide, i) => {
       slide.style.opacity = i === index ? 1 : 0;
-      slide.querySelector('.title').style.opacity = 0;
-      slide.querySelector('.祝福文字').style.opacity = 0;
-      slide.querySelector('.title').style.animation = '';
-      slide.querySelector('.祝福文字').style.animation = '';
     });
   }
 
   function playAnimation() {
-    if (!isAnimating) {
-      isAnimating = true;
-      const currentSlide = slides[currentIndex];
-      const title = currentSlide.querySelector('.title');
-      const message = currentSlide.querySelector('.祝福文字');
+    const currentSlide = slides[currentIndex];
+    const title = currentSlide.querySelector('.title');
+    const message = currentSlide.querySelector('.祝福文字');
 
-      title.style.animation = 'slideDown 0.5s forwards';
-      message.style.animation = 'fadeIn 0.5s 0.5s forwards';
+    title.style.opacity = 1; // 设置标题可见
+    message.style.opacity = 1; // 设置祝福文字可见
 
-      setTimeout(() => {
-        isAnimating = false;
-      }, 1000); // 假设动画在1秒内完成
-    }
+    // 为标题添加下滑动画
+    title.style.animation = 'slideDown 0.5s forwards';
+    // 为祝福文字添加淡入动画
+    message.style.animation = 'fadeIn 0.5s 0.5s forwards';
   }
 
   document.addEventListener('click', () => {
@@ -97,14 +90,6 @@
       }
     }
   });
-
-  // 自动播放下一张幻灯片
-  setInterval(() => {
-    if (!isAnimating) { // 如果当前没有动画播放，则自动播放下一张
-      currentIndex = (currentIndex + 1) % slides.length;
-      updateSlide(currentIndex);
-    }
-  }, 3000);
 </script>
 
 <style>
