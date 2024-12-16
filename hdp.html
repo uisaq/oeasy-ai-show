@@ -44,6 +44,8 @@
     font-size: 1em;
     color: white; /* 设置祝福文字颜色为白色 */
     opacity: 0;
+    text-align: center;
+    max-width: 80%; /* 确保文字不会超出屏幕宽度 */
   }
 </style>
 </head>
@@ -112,7 +114,7 @@
 <style>
   @keyframes slideDown {
     from { transform: translateY(-100%); }
-    to { transform: translateY(-50%); }
+    to { transform: translateY(0); }
   }
   @keyframes fadeIn {
     from { opacity: 0; }
