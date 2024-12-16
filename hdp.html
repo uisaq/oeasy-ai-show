@@ -20,10 +20,14 @@
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     font-size: 2em;
     color: white;
+  }
+  .slide:nth-child(1) .title {
+    color: black;
   }
   .slide:nth-child(1) {
     opacity: 1;
@@ -39,18 +43,28 @@
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
   }
+  .祝福文字 {
+    font-size: 1em;
+    color: white;
+    max-width: 80%;
+    text-align: center;
+    opacity: 0;
+  }
 </style>
 </head>
 <body>
 
 <div class="slide">
   <div class="title">心想事成</div>
+  <p class="祝福文字">愿你的每一个梦想都能实现，每一个愿望都能达成。</p>
 </div>
 <div class="slide">
   <div class="title">财源滚滚</div>
+  <p class="祝福文字">愿你的财富像流水一样源源不断，财源广进。</p>
 </div>
 <div class="slide">
   <div class="title">学业有成</div>
+  <p class="祝福文字">愿你的学业进步，知识丰富，成就非凡。</p>
 </div>
 
 <script>
@@ -87,16 +101,18 @@
   });
 
   document.addEventListener('click', function() {
-    const title = document.querySelector('.slide:nth-child(' + (currentIndex + 1) + ') .title');
-    if (title) {
-      title.style.opacity = 1;
-      if (currentIndex === 0) {
-        title.style.animation = 'slideUp 0.5s forwards';
-      } else if (currentIndex === 1) {
-        title.style.animation = 'slideDown 0.5s forwards';
-      } else if (currentIndex === 2) {
-        title.style.animation = 'accordion 2s forwards';
-      }
+    const currentSlide = slides[currentIndex];
+    const title = currentSlide.querySelector('.title');
+    const message = currentSlide.querySelector('.祝福文字');
+    title.style.opacity = 1;
+    message.style.opacity = 1;
+
+    if (currentIndex === 0) {
+      title.style.animation = 'slideUp 0.5s forwards';
+    } else if (currentIndex === 1) {
+      title.style.animation = 'slideDown 0.5s forwards';
+    } else if (currentIndex === 2) {
+      title.style.animation = 'accordion 2s forwards';
     }
   });
 </script>
