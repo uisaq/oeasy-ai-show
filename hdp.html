@@ -35,17 +35,9 @@
   .slide:nth-child(3) {
     background-color: blue;
   }
-  .title {
-    font-size: 2em;
-    color: black;
+  .title, .祝福文字 {
     opacity: 0;
-  }
-  .祝福文字 {
-    font-size: 1em;
-    color: white;
-    opacity: 0;
-    text-align: center;
-    max-width: 80%;
+    transition: opacity 0.5s ease-in-out;
   }
 </style>
 </head>
@@ -66,7 +58,7 @@
 
 <script>
   let currentIndex = 0;
-  let isAnimating = false;
+  let isAnimating = false; // 控制动画的标志
   const slides = document.querySelectorAll('.slide');
 
   function updateSlide(index) {
@@ -80,33 +72,39 @@
   }
 
   function playAnimation() {
-    const currentSlide = slides[currentIndex];
-    const title = currentSlide.querySelector('.title');
-    const message = currentSlide.querySelector('.祝福文字');
+    if (!isAnimating) {
+      isAnimating = true;
+      const currentSlide = slides[currentIndex];
+      const title = currentSlide.querySelector('.title');
+      const message = currentSlide.querySelector('.祝福文字');
 
-    title.style.animation = 'slideDown 0.5s forwards';
-    message.style.animation = 'fadeIn 0.5s 0.5s forwards';
+      title.style.animation = 'slideDown 0.5s forwards';
+      message.style.animation = 'fadeIn 0.5s 0.5s forwards';
+
+      setTimeout(() => {
+        isAnimating = false;
+      }, 1000); // 假设动画在1秒内完成
+    }
   }
 
   document.addEventListener('click', () => {
-    if (!isAnimating) {
-      isAnimating = true;
+    if (currentIndex < slides.length) {
       updateSlide(currentIndex);
       playAnimation();
-      setTimeout(() => {
-        isAnimating = false;
-      }, 1000); // Reset isAnimating after animations are done
+      currentIndex++;
+      if (currentIndex >= slides.length) {
+        currentIndex = 0; // 重置索引，重新开始
+      }
     }
   });
 
-  function nextSlide() {
-    if (!isAnimating) { // Only advance slides when not animating
+  // 自动播放下一张幻灯片
+  setInterval(() => {
+    if (!isAnimating) { // 如果当前没有动画播放，则自动播放下一张
       currentIndex = (currentIndex + 1) % slides.length;
       updateSlide(currentIndex);
     }
-  }
-
-  setInterval(nextSlide, 3000); // Change slide every 3 seconds
+  }, 3000);
 </script>
 
 <style>
