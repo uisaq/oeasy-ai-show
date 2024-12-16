@@ -66,7 +66,7 @@
 
 <script>
   let currentIndex = 0;
-  let isAnimating = false; // 控制动画的标志
+  let isAnimating = false;
   const slides = document.querySelectorAll('.slide');
   let startY;
 
@@ -87,12 +87,13 @@
       const title = currentSlide.querySelector('.title');
       const message = currentSlide.querySelector('.祝福文字');
 
+      title.style.opacity = 1; // Ensure title is visible before animating
       title.style.animation = 'slideDown 0.5s forwards';
       message.style.animation = 'fadeIn 0.5s 0.5s forwards';
 
       setTimeout(() => {
         isAnimating = false;
-      }, 1000); // 假设动画在1秒内完成
+      }, 1000); // Assuming animations complete within 1 second
     }
   }
 
@@ -115,7 +116,7 @@
         currentIndex = (currentIndex - 1 + slides.length) % slides.length;
       }
       updateSlide(currentIndex);
-      playAnimation(); // 播放动画
+      playAnimation();
     }
   });
 
