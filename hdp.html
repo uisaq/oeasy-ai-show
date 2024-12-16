@@ -44,13 +44,13 @@
 <body>
 
 <div class="slide">
-  <div class="title" style="animation: slideUp 0.5s forwards;">心想事成</div>
+  <div class="title" style="animation: slideUp 0.5s 0.5s forwards;">心想事成</div>
 </div>
 <div class="slide">
-  <div class="title" style="animation: slideDown 0.5s forwards;">财源滚滚</div>
+  <div class="title" style="animation: slideDown 0.5s 0.5s forwards;">财源滚滚</div>
 </div>
 <div class="slide">
-  <div class="title" style="animation: accordion 2s forwards;">学业有成</div>
+  <div class="title" style="animation: accordion 2s 0.5s forwards;">学业有成</div>
 </div>
 
 <script>
@@ -61,7 +61,13 @@
   function updateSlide(index) {
     slides.forEach((slide, i) => {
       slide.style.opacity = i === index ? 1 : 0;
+      // 重置所有标题的动画状态
+      slide.querySelector('.title').style.animation = '';
     });
+    // 为当前幻灯片的标题添加动画
+    if (slides[index].querySelector('.title')) {
+      slides[index].querySelector('.title').style.animation = `slideDown 0.5s ${0.5 + index * 0.5}s forwards`;
+    }
   }
 
   document.addEventListener('touchstart', (e) => {
