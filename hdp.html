@@ -23,12 +23,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-size: 2em;
     color: white;
-    pointer-events: none; /* 允许点击事件传递到文档 */
-  }
-  .slide:nth-child(1) .title {
-    color: black;
   }
   .slide:nth-child(1) {
     opacity: 1;
@@ -40,9 +35,15 @@
   .slide:nth-child(3) {
     background-color: blue;
   }
-  .title, .祝福文字 {
+  .title {
+    font-size: 2em;
+    color: black; /* 设置标题颜色为黑色 */
     opacity: 0;
-    transition: opacity 0.5s ease-in-out;
+  }
+  .祝福文字 {
+    font-size: 1em;
+    color: white; /* 设置祝福文字颜色为白色 */
+    opacity: 0;
   }
 </style>
 </head>
@@ -71,6 +72,8 @@
       slide.style.opacity = i === index ? 1 : 0;
       slide.querySelector('.title').style.opacity = 0;
       slide.querySelector('.祝福文字').style.opacity = 0;
+      slide.querySelector('.title').style.animation = '';
+      slide.querySelector('.祝福文字').style.animation = '';
     });
   }
 
@@ -101,31 +104,15 @@
     const title = currentSlide.querySelector('.title');
     const message = currentSlide.querySelector('.祝福文字');
 
-    if (currentIndex === 0) {
-      title.style.animation = 'slideUp 0.5s forwards';
-      message.style.animation = 'fadeIn 0.5s 0.5s forwards';
-    } else if (currentIndex === 1) {
-      title.style.animation = 'slideDown 0.5s forwards';
-      message.style.animation = 'fadeIn 0.5s 0.5s forwards';
-    } else if (currentIndex === 2) {
-      title.style.animation = 'accordion 2s forwards';
-      message.style.animation = 'fadeIn 0.5s 0.5s forwards';
-    }
+    title.style.animation = 'slideDown 0.5s forwards';
+    message.style.animation = 'fadeIn 0.5s 0.5s forwards';
   });
 </script>
 
 <style>
-  @keyframes slideUp {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
-  }
   @keyframes slideDown {
     from { transform: translateY(-100%); }
-    to { transform: translateY(0); }
-  }
-  @keyframes accordion {
-    from { height: 0; }
-    to { height: 100%; }
+    to { transform: translateY(-50%); }
   }
   @keyframes fadeIn {
     from { opacity: 0; }
