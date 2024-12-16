@@ -27,7 +27,7 @@
   }
   .slide:nth-child(1) {
     opacity: 1;
-    background-color: red; /* 第一张幻灯片背景改为红色 */
+    background-color: red;
   }
   .slide:nth-child(2) {
     background-color: green;
@@ -37,15 +37,15 @@
   }
   .title {
     font-size: 2em;
-    color: black; /* 确保标题颜色与背景有足够的对比度 */
+    color: black;
     opacity: 0;
   }
   .祝福文字 {
     font-size: 1em;
-    color: white; /* 设置祝福文字颜色为白色 */
+    color: white;
     opacity: 0;
     text-align: center;
-    max-width: 80%; /* 确保文字不会超出屏幕宽度 */
+    max-width: 80%;
   }
 </style>
 </head>
@@ -66,13 +66,34 @@
 
 <script>
   let currentIndex = 0;
+  let isAnimating = false; // 控制动画的标志
   const slides = document.querySelectorAll('.slide');
   let startY;
 
   function updateSlide(index) {
     slides.forEach((slide, i) => {
       slide.style.opacity = i === index ? 1 : 0;
+      slide.querySelector('.title').style.opacity = 0;
+      slide.querySelector('.祝福文字').style.opacity = 0;
+      slide.querySelector('.title').style.animation = '';
+      slide.querySelector('.祝福文字').style.animation = '';
     });
+  }
+
+  function playAnimation() {
+    if (!isAnimating) {
+      isAnimating = true;
+      const currentSlide = slides[currentIndex];
+      const title = currentSlide.querySelector('.title');
+      const message = currentSlide.querySelector('.祝福文字');
+
+      title.style.animation = 'slideDown 0.5s forwards';
+      message.style.animation = 'fadeIn 0.5s 0.5s forwards';
+
+      setTimeout(() => {
+        isAnimating = false;
+      }, 1000); // 假设动画在1秒内完成
+    }
   }
 
   document.addEventListener('touchstart', (e) => {
@@ -80,7 +101,7 @@
   });
 
   document.addEventListener('touchmove', (e) => {
-    e.preventDefault(); // 阻止默认滚动行为
+    e.preventDefault();
   });
 
   document.addEventListener('touchend', (e) => {
@@ -94,19 +115,11 @@
         currentIndex = (currentIndex - 1 + slides.length) % slides.length;
       }
       updateSlide(currentIndex);
+      playAnimation(); // 播放动画
     }
   });
 
-  document.addEventListener('click', function() {
-    const currentSlide = slides[currentIndex];
-    const title = currentSlide.querySelector('.title');
-    const message = currentSlide.querySelector('.祝福文字');
-
-    title.style.opacity = 1; // 确保标题立即可见
-    title.style.animation = 'slideDown 0.5s forwards';
-    message.style.opacity = 1; // 确保祝福文字立即可见
-    message.style.animation = 'fadeIn 0.5s 0.5s forwards';
-  });
+  document.addEventListener('click', playAnimation);
 </script>
 
 <style>
