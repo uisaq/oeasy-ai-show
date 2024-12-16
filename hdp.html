@@ -9,7 +9,7 @@
     overflow: hidden;
     width: 100%;
     height: 100%;
-    touch-action: manipulation; /* 允许触摸操作 */
+    touch-action: manipulation;
   }
   .slide {
     width: 100%;
@@ -19,17 +19,39 @@
     left: 0;
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+    color: white;
   }
   .slide:nth-child(1) {
     opacity: 1;
+    background-color: yellow;
+  }
+  .slide:nth-child(2) {
+    background-color: green;
+  }
+  .slide:nth-child(3) {
+    background-color: blue;
+  }
+  .title {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
   }
 </style>
 </head>
 <body>
 
-<div class="slide" style="background-color: yellow;"></div>
-<div class="slide" style="background-color: green;"></div>
-<div class="slide" style="background-color: blue;"></div>
+<div class="slide">
+  <div class="title" style="animation: slideUp 0.5s forwards;">心想事成</div>
+</div>
+<div class="slide">
+  <div class="title" style="animation: slideDown 0.5s forwards;">财源滚滚</div>
+</div>
+<div class="slide">
+  <div class="title" style="animation: accordion 2s forwards;">学业有成</div>
+</div>
 
 <script>
   let currentIndex = 0;
@@ -48,18 +70,33 @@
 
   document.addEventListener('touchend', (e) => {
     const endY = e.touches[0].pageY;
-    const diff = startY - endY; // 计算上滑距离
+    const diff = startY - endY;
 
-    if (Math.abs(diff) > 100) { // 如果滑动距离大于100px
-      if (diff > 0) { // 下滑
+    if (Math.abs(diff) > 100) {
+      if (diff > 0) {
         currentIndex = (currentIndex + 1) % slides.length;
-      } else { // 上滑
+      } else {
         currentIndex = (currentIndex - 1 + slides.length) % slides.length;
       }
       updateSlide(currentIndex);
     }
   });
 </script>
+
+<style>
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(-50%); }
+  }
+  @keyframes slideDown {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(50%); }
+  }
+  @keyframes accordion {
+    0%, 100% { height: 0; }
+    50% { height: 100%; }
+  }
+</style>
 
 </body>
 </html>
