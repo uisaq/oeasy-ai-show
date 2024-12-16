@@ -66,35 +66,24 @@
 
 <script>
   let currentIndex = 0;
-  let isAnimating = false;
   const slides = document.querySelectorAll('.slide');
   let startY;
 
   function updateSlide(index) {
     slides.forEach((slide, i) => {
       slide.style.opacity = i === index ? 1 : 0;
-      slide.querySelector('.title').style.opacity = 0;
-      slide.querySelector('.祝福文字').style.opacity = 0;
-      slide.querySelector('.title').style.animation = '';
-      slide.querySelector('.祝福文字').style.animation = '';
     });
   }
 
   function playAnimation() {
-    if (!isAnimating) {
-      isAnimating = true;
-      const currentSlide = slides[currentIndex];
-      const title = currentSlide.querySelector('.title');
-      const message = currentSlide.querySelector('.祝福文字');
+    const currentSlide = slides[currentIndex];
+    const title = currentSlide.querySelector('.title');
+    const message = currentSlide.querySelector('.祝福文字');
 
-      title.style.opacity = 1; // Ensure title is visible before animating
-      title.style.animation = 'slideDown 0.5s forwards';
-      message.style.animation = 'fadeIn 0.5s 0.5s forwards';
-
-      setTimeout(() => {
-        isAnimating = false;
-      }, 1000); // Assuming animations complete within 1 second
-    }
+    title.style.opacity = 1; // Ensure title is visible before animating
+    title.style.animation = 'slideDown 0.5s forwards';
+    message.style.opacity = 1; // Ensure message is visible before animating
+    message.style.animation = 'fadeIn 0.5s 0.5s forwards';
   }
 
   document.addEventListener('touchstart', (e) => {
@@ -112,15 +101,23 @@
     if (Math.abs(diff) > 100) {
       if (diff > 0) {
         currentIndex = (currentIndex + 1) % slides.length;
+        if (currentIndex === 0) { // Reset for the second loop
+          updateSlide(currentIndex);
+          playAnimation();
+        }
       } else {
         currentIndex = (currentIndex - 1 + slides.length) % slides.length;
       }
       updateSlide(currentIndex);
-      playAnimation();
     }
   });
 
-  document.addEventListener('click', playAnimation);
+  document.addEventListener('click', () => {
+    if (currentIndex !== 0) {
+      updateSlide(currentIndex);
+    }
+    playAnimation();
+  });
 </script>
 
 <style>
