@@ -25,6 +25,7 @@
     align-items: center;
     font-size: 2em;
     color: white;
+    pointer-events: none; /* 允许点击事件传递到文档 */
   }
   .slide:nth-child(1) .title {
     color: black;
@@ -39,16 +40,9 @@
   .slide:nth-child(3) {
     background-color: blue;
   }
-  .title {
+  .title, .祝福文字 {
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
-  }
-  .祝福文字 {
-    font-size: 1em;
-    color: white;
-    max-width: 80%;
-    text-align: center;
-    opacity: 0;
   }
 </style>
 </head>
@@ -75,6 +69,8 @@
   function updateSlide(index) {
     slides.forEach((slide, i) => {
       slide.style.opacity = i === index ? 1 : 0;
+      slide.querySelector('.title').style.opacity = 0;
+      slide.querySelector('.祝福文字').style.opacity = 0;
     });
   }
 
@@ -104,15 +100,16 @@
     const currentSlide = slides[currentIndex];
     const title = currentSlide.querySelector('.title');
     const message = currentSlide.querySelector('.祝福文字');
-    title.style.opacity = 1;
-    message.style.opacity = 1;
 
     if (currentIndex === 0) {
       title.style.animation = 'slideUp 0.5s forwards';
+      message.style.animation = 'fadeIn 0.5s 0.5s forwards';
     } else if (currentIndex === 1) {
       title.style.animation = 'slideDown 0.5s forwards';
+      message.style.animation = 'fadeIn 0.5s 0.5s forwards';
     } else if (currentIndex === 2) {
       title.style.animation = 'accordion 2s forwards';
+      message.style.animation = 'fadeIn 0.5s 0.5s forwards';
     }
   });
 </script>
@@ -129,6 +126,10 @@
   @keyframes accordion {
     from { height: 0; }
     to { height: 100%; }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 </style>
 
